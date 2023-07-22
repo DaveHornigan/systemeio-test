@@ -1,4 +1,19 @@
-#App\Entity\Product:
-#  product_iphone:
-#  product_headphones:
-#  product_case:
+App\Entity\Product:
+  product_iphone:
+    __construct:
+      name: iphone
+      price: 10000
+      createdAt: <(\DateTimeImmutable::createFromMutable(\Faker\Factory::create()->dateTimeBetween('-10 days', '-5 days')))>
+      updatedAt: <dateTimeBetween('-5 days', 'now')>
+  product_headphones:
+    __construct:
+      name: Headphones
+      price: 2000
+      createdAt: <(\DateTimeImmutable::createFromMutable(\Faker\Factory::create()->dateTimeBetween('-10 days', '-5 days')))>
+      updatedAt: <dateTimeBetween('-5 days', 'now')>
+  product_case:
+    __construct:
+      name: Case
+      price: 1000
+      createdAt: <(\DateTimeImmutable::createFromMutable(\Faker\Factory::create()->dateTimeBetween('-10 days', '-5 days')))>
+      updatedAt: <dateTimeBetween('-5 days', 'now')>

@@ -27,7 +27,10 @@ class Product
         private DateTimeInterface $createdAt = new DateTimeImmutable(),
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTimeInterface $updatedAt = new DateTime(),
-    ) {}
+        ?string $id = null
+    ) {
+        $this->id = $id;
+    }
 
     public function getId(): string
     {
