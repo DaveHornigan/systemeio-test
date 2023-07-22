@@ -7,6 +7,7 @@ use App\Dto\Response\PaymentCostResponse;
 use App\Dto\Response\ValidationErrorResponse;
 use App\Form\Type\CalculateCostType;
 use App\Service\Discount\DiscountInterface;
+use App\Service\PriceCalculator\PriceCalculatorInterface;
 use App\Service\Tax\TaxInterface;
 use JsonException;
 use Symfony\Component\Form\FormError;
@@ -24,6 +25,7 @@ class ProductController
         private readonly FormFactoryInterface $formFactory,
         private readonly DiscountInterface $discount,
         private readonly TaxInterface $tax,
+        private readonly PriceCalculatorInterface $calculator,
     ) {}
 
     #[Route('/calculate-cost', name: 'calculate-cost', methods: [Request::METHOD_POST])]
@@ -53,9 +55,10 @@ class ProductController
 
         $coupon = $this->discount->getCoupon($requestDto->couponCode);
         $taxPercent = $this->tax->getTaxPercentByNumber($requestDto->taxNumber);
+        $productPrice = 1000;
 
-        $response = new PaymentCostResponse(0);
+        $finallyCost = $this->calculator->calculate($coupon->getFixedPrice($productPrice), $taxPercent);
 
-        return new JsonResponse($response, Response::HTTP_OK);
+        return new JsonResponse(new PaymentCostResponse($finallyCost), Response::HTTP_OK);
     }
 }
