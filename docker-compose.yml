@@ -15,6 +15,23 @@ services:
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
 
+  php:
+    build: ./build
+    links:
+      - database
+    volumes:
+      - .:/var/www:rw
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www:rw
+      - ./build/nginx/nginx.conf:/etc/nginx/conf.d/40-custom.conf
+    links:
+      - php
+
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
