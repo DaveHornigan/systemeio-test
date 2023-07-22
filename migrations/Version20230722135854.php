@@ -24,7 +24,7 @@ final class Version20230722135854 extends AbstractMigration
     {
         $table = $schema->createTable($this->tableName);
         $table->addColumn('id', Types::GUID);
-        $table->addColumn('name', Types::STRING)->setLength(16);
+        $table->addColumn('name', Types::STRING)->setLength(200);
         $table->addColumn('price', Types::INTEGER)->setUnsigned(true)->setComment('Euro cents');
         $table->addColumn('created_at', Types::DATETIME_IMMUTABLE)->setDefault('CURRENT_TIMESTAMP');
         $table->addColumn('updated_at', Types::DATETIME_MUTABLE)->setDefault('CURRENT_TIMESTAMP');
