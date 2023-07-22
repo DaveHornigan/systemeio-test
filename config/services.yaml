@@ -17,6 +17,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
+            - '../src/Dto/'
             - '../src/Entity/'
             - '../src/Kernel.php'
 
@@ -24,5 +25,23 @@ services:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
+    PaypalPaymentProcessor:
+        class: PaypalPaymentProcessor
+    StripePaymentProcessor:
+        class: StripePaymentProcessor
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\PaymentProcessor\Strategy\PaypalPaymentStrategy: ~
+    App\Service\PaymentProcessor\Strategy\StripePaymentStrategy: ~
+
+    App\Service\PaymentProcessor\PaymentProcessorInterface:
+        class: App\Service\PaymentProcessor\PaymentProcessor
+        public: true
+        autowire: true
+
+    App\Service\PaymentProcessor\PaymentStrategyRegistry:
+        calls:
+            - register: ['@App\Service\PaymentProcessor\Strategy\PaypalPaymentStrategy']
+            - register: ['@App\Service\PaymentProcessor\Strategy\StripePaymentStrategy']
