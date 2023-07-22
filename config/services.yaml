@@ -45,3 +45,6 @@ services:
         calls:
             - register: ['@App\Service\PaymentProcessor\Strategy\PaypalPaymentStrategy']
             - register: ['@App\Service\PaymentProcessor\Strategy\StripePaymentStrategy']
+
+    App\EventListener\ExceptionListener:
+        tags: [kernel.event_listener]

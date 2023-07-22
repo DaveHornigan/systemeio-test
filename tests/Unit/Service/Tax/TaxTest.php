@@ -41,6 +41,7 @@ class TaxTest extends TestCase
             ['taxNumber' => 'FRHH123456789', 'expectedPercent' => 20],
         ];
     }
+
     public function testGetTaxPercentByNumberInvalidCode(): void
     {
         $em = $this->createMock(EntityManagerInterface::class);
@@ -52,5 +53,30 @@ class TaxTest extends TestCase
 
         $this->expectException(NotFoundException::class);
         $service->getTaxPercentByNumber('BR123456789');
+    }
+
+    /** @dataProvider getPriceAndTaxVariants */
+    public function testGetPriceWithTaxByNumber(int $price, int $taxPercent, int $expectedPrice): void
+    {
+        $em = $this->createMock(EntityManagerInterface::class);
+        $repo = $this->createMock(ObjectRepository::class);
+        $em->method('getRepository')->willReturn($repo);
+        $repo->method('findOneBy')->willReturn(
+            new Entity\Tax('country name', 'DE', $taxPercent)
+        );
+
+        $service = new Tax($em);
+
+        self::assertSame($expectedPrice, $service->getPriceWithTaxByNumber($price, 'stub'));
+    }
+
+    public function getPriceAndTaxVariants(): array
+    {
+        return [
+            ['price' => 100, 'taxPercent' => 19, 'expectedPrice' => 119],
+            ['price' => 100, 'taxPercent' => 40, 'expectedPrice' => 140],
+            ['price' => 100, 'taxPercent' => 85, 'expectedPrice' => 185],
+            ['price' => 12345, 'taxPercent' => 50, 'expectedPrice' => 18517],
+        ];
     }
 }

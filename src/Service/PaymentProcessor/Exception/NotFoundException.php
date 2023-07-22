@@ -2,6 +2,9 @@
 
 namespace App\Service\PaymentProcessor\Exception;
 
-class NotFoundException extends \Exception
+use Exception;
+
+class NotFoundException extends Exception
 {
+    protected $code = 404;
 }

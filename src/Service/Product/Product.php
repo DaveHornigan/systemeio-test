@@ -5,6 +5,7 @@ namespace App\Service\Product;
 use App\Service\Product\Exception\NotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Exception;
 
 class Product implements ProductInterface
 {
@@ -18,7 +19,11 @@ class Product implements ProductInterface
 
     public function getProduct(string $productId): ValueObject\Product
     {
-        $product = $this->repository->find($productId);
+        try {
+            $product = $this->repository->find($productId);
+        } catch (Exception $e) {
+            throw new NotFoundException('Product not found.', previous: $e);
+        }
         if ($product !== null) {
             return new ValueObject\Product(
                 $product->getId(),

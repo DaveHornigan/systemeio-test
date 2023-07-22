@@ -2,8 +2,8 @@
 
 namespace App\Service\PaymentProcessor\Enum;
 
-enum PaymentStrategy
+enum PaymentStrategy: string
 {
-    case PayPal;
-    case Stripe;
+    case PayPal = 'paypal';
+    case Stripe = 'stripe';
 }

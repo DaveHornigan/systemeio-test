@@ -26,4 +26,12 @@ class Tax implements TaxInterface
 
         throw new NotFoundException('Tax not found.');
     }
+
+    /** @inheritDoc */
+    public function getPriceWithTaxByNumber(int $price, string $taxNumber): int
+    {
+        $taxPercent = $this->getTaxPercentByNumber($taxNumber);
+
+        return $price + ($price / 100 * $taxPercent);
+    }
 }

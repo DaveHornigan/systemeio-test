@@ -20,9 +20,7 @@ class Discount implements DiscountInterface
         $this->repository = $entityManager->getRepository(\App\Entity\Coupon::class);
     }
 
-    /**
-     * @throws NotFoundException|CouponNotValidException
-     */
+    /** @inheritDoc */
     public function getCoupon(string $couponCode): Coupon
     {
         if (null !== $coupon = $this->repository->findOneBy(['code' => $couponCode])) {
