@@ -4,15 +4,18 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
 #[ORM\Entity]
 class Tax
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Column(type: Types::GUID)]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    private ?string $id = null;
+
     public function __construct(
-        #[ORM\Id]
-        #[ORM\GeneratedValue(strategy: 'UUID')]
-        #[ORM\Column(type: Types::GUID)]
-        private string $id,
         #[ORM\Column(type: Types::STRING, length: 32)]
         private string $countryName,
         #[ORM\Column(type: Types::STRING, length: 3)]
@@ -21,7 +24,7 @@ class Tax
         private int $percent,
     ) {}
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }

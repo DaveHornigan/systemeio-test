@@ -28,6 +28,7 @@ final class Version20230722135100 extends AbstractMigration
         $table->addColumn('type', Types::STRING)->setLength(16);
         $table->addColumn('value', Types::SMALLINT)->setUnsigned(true)->setComment('Percent or Euro cents');
         $table->addColumn('expired_at', Types::DATETIME_MUTABLE);
+        $table->addColumn('used_at', Types::DATETIME_IMMUTABLE)->setNotnull(false);
         $table->addColumn('created_at', Types::DATETIME_IMMUTABLE)->setDefault('CURRENT_TIMESTAMP');
 
         $table->setPrimaryKey(['id']);

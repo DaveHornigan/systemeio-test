@@ -3,18 +3,22 @@
 namespace App\Entity;
 
 use App\Entity\Enum\CouponType;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
 #[ORM\Entity]
 class Coupon
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\Column(type: Types::GUID)]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    private ?string $id = null;
+
     public function __construct(
-        #[ORM\Id]
-        #[ORM\GeneratedValue(strategy: 'UUID')]
-        #[ORM\Column(type: Types::GUID)]
-        private string $id,
         #[ORM\Column(type: Types::STRING, length: 32)]
         private string $code,
         #[ORM\Column(type: Types::STRING, length: 16, enumType: CouponType::class)]
@@ -23,8 +27,10 @@ class Coupon
         private int $value,
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTimeInterface $expiredAt,
+        #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+        private ?DateTimeInterface $usedAt = null,
         #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-        private DateTimeInterface $createdAt,
+        private DateTimeInterface $createdAt = new DateTimeImmutable(),
     ) {}
 
     public function getId(): string
@@ -50,6 +56,11 @@ class Coupon
     public function getExpiredAt(): DateTimeInterface
     {
         return $this->expiredAt;
+    }
+
+    public function getUsedAt(): ?DateTimeInterface
+    {
+        return $this->usedAt;
     }
 
     public function getCreatedAt(): DateTimeInterface

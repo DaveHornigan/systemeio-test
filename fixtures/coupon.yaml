@@ -1,0 +1,9 @@
+App\Entity\Coupon:
+  coupon_active:
+    __construct:
+      code: <numerify('D####')>
+      type: <constant(App\Entity\Enum\CouponType::Percent)>
+      value: <numberBetween(10, 90)>
+      usedAt:
+      createdAt: <(\DateTimeImmutable::createFromMutable(\Faker\Factory::create()->dateTimeBetween('-10 days', '-5 days')))>
+      expiredAt: <dateTimeBetween('+1 days', '+5 days')>

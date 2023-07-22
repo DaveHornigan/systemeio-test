@@ -1,0 +1,21 @@
+App\Entity\Tax:
+  tax_de:
+    __construct:
+      countryCode: 'DE'
+      countryName: 'Germany'
+      percent: 19
+  tax_it:
+    __construct:
+      countryCode: 'IT'
+      countryName: 'Italy'
+      percent: 22
+  tax_gr:
+    __construct:
+      countryCode: 'GR'
+      countryName: 'Greece'
+      percent: 24
+  tax_fr:
+    __construct:
+      countryCode: 'FR'
+      countryName: 'France'
+      percent: 20

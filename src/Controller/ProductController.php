@@ -6,6 +6,9 @@ use App\Dto\Request\CalculateCostRequest;
 use App\Dto\Response\PaymentCostResponse;
 use App\Dto\Response\ValidationErrorResponse;
 use App\Form\Type\CalculateCostType;
+use App\Service\Discount\DiscountInterface;
+use App\Service\Tax\TaxInterface;
+use JsonException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,17 +21,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController
 {
     public function __construct(
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
+        private readonly DiscountInterface $discount,
+        private readonly TaxInterface $tax,
     ) {}
 
     #[Route('/calculate-cost', name: 'calculate-cost', methods: [Request::METHOD_POST])]
     public function calculateCost(Request $request): Response
     {
-        $form = $this->formFactory->create(CalculateCostType::class, options: ['data_class' => CalculateCostRequest::class]);
+        $requestDto = new CalculateCostRequest();
+
+        $form = $this->formFactory->create(CalculateCostType::class, $requestDto, options: ['data_class' => CalculateCostRequest::class]);
         try {
             $requestData = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
             $form->submit($requestData);
-        } catch (\JsonException) {
+        } catch (JsonException) {
             throw new BadRequestHttpException('Invalid json format.');
         }
 
@@ -43,6 +50,9 @@ class ProductController
             // Should be generated in ErrorHandler instead
             return new JsonResponse(new ValidationErrorResponse(errors: $errors), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $coupon = $this->discount->getCoupon($requestDto->couponCode);
+        $taxPercent = $this->tax->getTaxPercentByNumber($requestDto->taxNumber);
 
         $response = new PaymentCostResponse(0);
 
